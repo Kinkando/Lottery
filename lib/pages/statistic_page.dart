@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+
+class StatisticPage extends StatefulWidget {
+  // static const routeName = '/statistic';
+
+  const StatisticPage({Key? key}) : super(key: key);
+
+  @override
+  _StatisticPageState createState() => _StatisticPageState();
+}
+
+class _StatisticPageState extends State<StatisticPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: Text('STATISTIC')
+          )
+        ],
+      ),
+    );
+  }
+}
