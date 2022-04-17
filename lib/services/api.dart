@@ -4,7 +4,7 @@ import 'package:lottery/models/api_result.dart';
 
 class Api {
   // static const baseURL = 'http://localhost/lottery';
-  static const baseURL = 'http://lottery-unikuma-api.herokuapp.com';
+  static const baseURL = 'https://unikume-lottery-api.herokuapp.com';
 
   Future<dynamic> fetch(
       String endPoint, {

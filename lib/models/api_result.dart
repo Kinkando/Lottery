@@ -1,19 +1,21 @@
 class ApiResult {
-  final bool status;
-  final String drawDate;
-  final List<dynamic> result;
+  final int status;
+  final String message;
+  final dynamic result;
 
   ApiResult({
     required this.status,
-    required this.drawDate,
+    required this.message,
     required this.result,
   });
 
   factory ApiResult.fromJson(Map<String, dynamic> json) {
+    final List results = [];
+    json.forEach((key, value) => results.add(value));
     return ApiResult(
-      status: json['status'],
-      drawDate: json['drawdate'],
-      result: json['result'],
+      status: results[0],
+      message: results[1],
+      result: results[2],
     );
   }
 }

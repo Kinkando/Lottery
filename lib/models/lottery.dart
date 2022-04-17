@@ -1,32 +1,45 @@
 class Lottery {
   final String drawDate;
-  final String id;
-  final String name;
-  final int reward;
-  final int amount;
-  var number;
+  final List<LotteryNumber> lottery;
 
   Lottery({
     required this.drawDate,
-    required this.id,
+    required this.lottery,
+  });
+
+  factory Lottery.fromJson(Map<String, dynamic> json) {
+    final List<LotteryNumber> lottery = [];
+    json.forEach((key, value) {
+      if(key != 'drawdate') {
+        lottery.add(LotteryNumber.fromJson(key, value));
+      }
+    });
+    return Lottery(
+      drawDate: json['drawdate'],
+      lottery: lottery,
+    );
+  }
+}
+
+class LotteryNumber {
+  final String name;
+  final int reward;
+  final int? set;
+  final dynamic number;
+
+  LotteryNumber({
     required this.name,
     required this.reward,
-    required this.amount,
+    required this.set,
     required this.number,
   });
 
-  factory Lottery.fromJson(Map<String, dynamic> json, String drawDate) {
-    return Lottery(
-      drawDate: drawDate,
-      id: json['id'],
-      name: json['name'],
+  factory LotteryNumber.fromJson(String drawDate, Map<String, dynamic> json) {
+    return LotteryNumber(
+      name: drawDate,
       reward: json['reward'],
-      amount: json['amount'],
+      set: json.containsKey('set') ? json['set'] : null,
       number: json['number'],
     );
-  }
-
-  String _number(String a) {
-    return a;
   }
 }
