@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottery/models/lottery.dart';
 import 'package:lottery/services/api.dart';
+import 'package:lottery/views/widgets/my_scaffold.dart';
 
 class HomePage extends StatefulWidget {
   // static const routeName = '';
@@ -15,38 +16,10 @@ class _HomePageState extends State<HomePage> {
   final _drawDateScrollController = ScrollController();
   final _lotteryScrollController = ScrollController();
   final _gridViewController = ScrollController();
-  String _date = "";
-  List? _drawDateList;
+  late String _date;
   bool _loading = true;
-  bool _lotteryLoading = false;
+  late List _drawDateList;
   late Lottery _lottery;
-  final _monthList = [
-    'มกราคม',
-    'กุมภาพันธ์',
-    'มีนาคม',
-    'เมษายน',
-    'พฤษภาคม',
-    'มิถุนายน',
-    'กรกฎาคม',
-    'สิงหาคม',
-    'กันยายน',
-    'ตุลาคม',
-    'พฤศจิกายน',
-    'ธันวาคม',
-  ];
-  final _lotteryName = {
-    'lotto_one': 'รางวัลที่ 1',
-    'lotto_first_three': 'เลขหน้า 3 ตัว',
-    'lotto_last_three': 'เลขท้าย 3 ตัว',
-    'lotto_last_two': 'เลขท้าย 2 ตัว',
-    'lotto_one_special_first_group': 'รางวัลที่ 1 พิเศษกลุ่มที่ 1',
-    'lotto_one_special_second_group': 'รางวัลที่ 1 พิเศษกลุ่มที่ 2',
-    'lotto_side_one': 'รางวัลข้างเคียงรางวัลที่ 1',
-    'lotto_two': 'รางวัลที่ 2',
-    'lotto_three': 'รางวัลที่ 3',
-    'lotto_four': 'รางวัลที่ 4',
-    'lotto_five': 'รางวัลที่ 5',
-  };
 
   @override
   void initState() {
@@ -56,7 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   void _fetch() async {
     List list = await Api().fetch('lotterys/dates');
-    final Map<String, dynamic> result = await Api().fetch('lotterys');
+    final Map<String, dynamic> result = await Api().fetch('lotterys', queryParams: {'date': list[0]});
     final lottery = Lottery.fromJson(result);
     setState(() {
       _drawDateList = list;
@@ -68,13 +41,13 @@ class _HomePageState extends State<HomePage> {
 
   void _fetchLottery() async {
     setState(() {
-      _lotteryLoading = true;
+      _loading = true;
     });
     final Map<String, dynamic> result = await Api().fetch('lotterys', queryParams: {'date': _date});
     final lottery = Lottery.fromJson(result);
     setState(() {
       _lottery = lottery;
-      _lotteryLoading = false;
+      _loading = false;
     });
   }
 
@@ -133,7 +106,7 @@ class _HomePageState extends State<HomePage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          child: _lotteryLoading
+          child: _loading
           ? const Center(child: CircularProgressIndicator())
           : ScrollConfiguration( //Not Scrollbar Display
             behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
@@ -171,7 +144,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(_lotteryName[lottery.name]!),
+          Text(lotteryName[lottery.name]!),
           if(lottery.set != null)
             Text('ชุดที่ ${lottery.set}'),
           Text(reward),
@@ -225,8 +198,8 @@ class _HomePageState extends State<HomePage> {
                   controller: _drawDateScrollController,
                   shrinkWrap: true,
                   children: [
-                    for(int i=0; i<_drawDateList!.length; i++)
-                      _datePicker(_drawDateList![i], setState),
+                    for(int i=0; i<_drawDateList.length; i++)
+                      _datePicker(_drawDateList[i], setState),
                   ],
                 ),
               );
@@ -282,7 +255,7 @@ class _HomePageState extends State<HomePage> {
   String _dateFormat(String date) {
     return 'งวดวันที่ '
         '${int.parse(date.substring(8))} '
-        '${_monthList[int.parse(date.substring(5, 7))-1]} '
+        '${monthList[int.parse(date.substring(5, 7))-1]} '
         '${date.substring(0, 4)}';
   }
 }

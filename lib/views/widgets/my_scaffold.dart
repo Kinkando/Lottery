@@ -65,3 +65,32 @@ class _MyScaffoldState extends State<MyScaffold> {
     );
   }
 }
+
+
+final monthList = [
+  'มกราคม',
+  'กุมภาพันธ์',
+  'มีนาคม',
+  'เมษายน',
+  'พฤษภาคม',
+  'มิถุนายน',
+  'กรกฎาคม',
+  'สิงหาคม',
+  'กันยายน',
+  'ตุลาคม',
+  'พฤศจิกายน',
+  'ธันวาคม',
+];
+final lotteryName = {
+  'lotto_one': 'รางวัลที่ 1',
+  'lotto_first_three': 'เลขหน้า 3 ตัว',
+  'lotto_last_three': 'เลขท้าย 3 ตัว',
+  'lotto_last_two': 'เลขท้าย 2 ตัว',
+  'lotto_one_special_first_group': 'รางวัลที่ 1 พิเศษกลุ่มที่ 1',
+  'lotto_one_special_second_group': 'รางวัลที่ 1 พิเศษกลุ่มที่ 2',
+  'lotto_side_one': 'รางวัลข้างเคียงรางวัลที่ 1',
+  'lotto_two': 'รางวัลที่ 2',
+  'lotto_three': 'รางวัลที่ 3',
+  'lotto_four': 'รางวัลที่ 4',
+  'lotto_five': 'รางวัลที่ 5',
+};
