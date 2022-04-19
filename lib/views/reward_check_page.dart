@@ -43,9 +43,7 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
     }
     Map<String, dynamic>? rewards = await Api().fetchBody('lottery/check/$_date', {'numbers': numbers});
     if(rewards != null) {
-      setState(() {
-        _rewards = rewards;
-      });
+      setState(() => _rewards = rewards);
     }
     return rewards != null;
   }
@@ -186,114 +184,150 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
   Widget _buildRewardSearch(BuildContext context, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        children: [
-          Expanded(
+      // child: Row(
+      //   children: [
+      //     Expanded(
             child: Card(
               elevation: 5,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(32.0),
               ),
-              child: TextField(
-                controller: _numberController[index],
-                decoration: InputDecoration(
-                  hintStyle: const TextStyle(fontSize: 17),
-                  hintText: 'กรอกเลขสลากของคุณ',
-                  suffixIcon: _numberController.length == 1 ? null : IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.grey),
-                    onPressed: () {
-                      setState(() {
-                        _numberController.removeAt(index);
-                      });
-                    },
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.all(10.0),
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(6),
-                ],
-                onChanged: (value) {
-                  if(value.length == 6) {
-                    for(int i=0; i<_numberController.length; i++) {
-                      if(value == _numberController[i].text && index != i) {
-                        setState(() {
-                          _numberController[index].clear();
-                        });
-                        showMaterialDialog(context, 'คุณระบุหมายเลขสลากนี้แล้ว');
-                        break;
-                      }
-                    }
-                  }
-                },
-              ),
-            ),
-          ),
-          index != _numberController.length - 1
-          ? const SizedBox(width: 58.0)
-          : Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: () {
-                  if(_numberController[index].text.length == 6) {
-                    setState(() {
-                      _numberController.add(TextEditingController());
-                    });
-                  }
-                  else {
-                    showMaterialDialog(context, 'เลขสลากไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
-                  }
-                },
-                child: Container(
-                  width: 50.0,
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue,
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.add, color: Colors.white),
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _numberController[index],
+                        decoration: const InputDecoration(
+                          hintStyle: TextStyle(fontSize: 17),
+                          hintText: 'กรอกเลขสลากของคุณ',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(10.0),
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(6),
+                        ],
+                        onChanged: (value) {
+                          if(value.length == 6) {
+                            for(int i=0; i<_numberController.length; i++) {
+                              if(value == _numberController[i].text && index != i) {
+                                setState(() =>_numberController[index].clear());
+                                showMaterialDialog(context, 'คุณระบุหมายเลขสลากนี้แล้ว');
+                                break;
+                              }
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                    if(_numberController.length > 1)
+                      InkWell(
+                        // borderRadius: BorderRadius.circular(50.0),
+                        customBorder: const CircleBorder(),
+                        child: const Center(
+                            child: Icon(Icons.clear, color: Colors.grey),
+                        ),
+                        onTap: () => setState(() =>_numberController.removeAt(index)),
+                      ),
+                  ],
                 ),
               ),
             ),
-        ],
-      ),
+          // ),
+          // index != _numberController.length - 1
+          // ? const SizedBox(width: 58.0)
+          // : Padding(
+          //     padding: const EdgeInsets.only(left: 8.0),
+          //     child: InkWell(
+          //       customBorder: const CircleBorder(),
+          //       onTap: () {
+          //         if(_numberController[index].text.length == 6) {
+          //           setState(() {
+          //             _numberController.add(TextEditingController());
+          //           });
+          //         }
+          //         else {
+          //           showMaterialDialog(context, 'เลขสลากไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
+          //         }
+          //       },
+          //       child: Container(
+          //         width: 50.0,
+          //         height: 50.0,
+          //         decoration: const BoxDecoration(
+          //           shape: BoxShape.circle,
+          //           color: Colors.blue,
+          //         ),
+          //         child: const Center(
+          //           child: Icon(Icons.add, color: Colors.white),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+        // ],
+      // ),
     );
   }
 
   Widget _buildCheckButton(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children: [
-        ElevatedButton(
-          onPressed: () async {
-            for(int i=0; i<_numberController.length; i++) {
-              if(_numberController[i].text.length != 6) {
-                showMaterialDialog(context, 'เลขสลากไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
-                return;
-              }
-            }
-            await _checkLottery();
-            final List<String> numbers = [];
-            for(int i=0; i<_numberController.length; i++) {
-              numbers.add(_numberController[i].text);
-            }
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RewardPage(numbers: numbers, rewards: _rewards, date: _date)),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-            )
+        Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  for(int i=0; i<_numberController.length; i++) {
+                    if(_numberController[i].text.length != 6) {
+                      showMaterialDialog(context, 'เลขสลากไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
+                      return;
+                    }
+                  }
+                  await _checkLottery();
+                  final List<String> numbers = [];
+                  for(int i=0; i<_numberController.length; i++) {
+                    numbers.add(_numberController[i].text);
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RewardPage(numbers: numbers, rewards: _rewards, date: _date)),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  )
+                ),
+                child: const Text('ตรวจสลาก'),
+              ),
+            ],
           ),
-          child: const Text('ตรวจสลาก'),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: () => setState(() => _numberController.add(TextEditingController())),
+              child: Container(
+                width: 50.0,
+                height: 50.0,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
+                ),
+                child: const Center(
+                  child: Icon(Icons.add, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );
