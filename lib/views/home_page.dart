@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _lotteryNumber(number) {
-    if(number.runtimeType != List) {
+    if(number is! List) {
       return Text(number);
     }
     else if(number.length <= 2) {
@@ -150,19 +150,18 @@ class _HomePageState extends State<HomePage> {
         ],
       );
     }
-    return const Text("GRID VIEW");
-    // return GridView(
-    //   controller: _gridViewController,
-    //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    //     crossAxisCount: 3,
-    //     mainAxisExtent: 20.0,
-    //   ),
-    //   shrinkWrap: true,
-    //   children: [
-    //     for(int i=0; i<number.length; i++)
-    //       Center(child: Text(number[i])),
-    //   ],
-    // );
+    return GridView(
+      controller: _gridViewController,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisExtent: 20.0,
+      ),
+      shrinkWrap: true,
+      children: [
+        for(int i=0; i<number.length; i++)
+          Center(child: Text(number[i])),
+      ],
+    );
   }
 
   void _drawDateSelected(BuildContext context) {
