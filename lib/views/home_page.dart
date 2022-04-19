@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
             controller: _lotteryScrollController,
             children: [
               for(int i=0; i<lotteryNumber.length; i++)
-                _buildLottery(lotteryNumber[i]),
+                Text('Card $i'),
             ],
           ),
         ),
