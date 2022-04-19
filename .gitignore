@@ -29,6 +29,7 @@
 .packages
 .pub-cache/
 .pub/
+/build/
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -60,9 +61,9 @@ win32_window.*
 windows/.gitignore
 
 # flutter build web
-build/a946b7283753ccedc2222095bbe6a128
-build/b6b68957fc5ed9202596a46ebc5bde9b
-build/b129fdd2ab7c1a9599d415e11788f5fc
-build/flutter_assets
-build/4f2a58af27abc49ecf55570043bbf938.cache.dill.track.dill
-build/last_build_run.json
+#build/a946b7283753ccedc2222095bbe6a128
+#build/b6b68957fc5ed9202596a46ebc5bde9b
+#build/b129fdd2ab7c1a9599d415e11788f5fc
+#build/flutter_assets
+#build/4f2a58af27abc49ecf55570043bbf938.cache.dill.track.dill
+#build/last_build_run.json

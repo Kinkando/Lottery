@@ -104,7 +104,15 @@ class _HomePageState extends State<HomePage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          child: const Center(child: CircularProgressIndicator())
+          child: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+            controller: _lotteryScrollController,
+            children: [
+              for(int i=0; i<lotteryNumber.length; i++)
+                _buildLottery(lotteryNumber[i]),
+            ],
+          ),
         ),
       ),
     );

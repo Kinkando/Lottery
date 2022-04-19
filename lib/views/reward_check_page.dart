@@ -55,20 +55,17 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
     }
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: ScrollConfiguration(
-        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildDrawDate(context),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Divider(height: 10.0,),
-            ),
-            _buildLotteryNumberField(context),
-            _buildCheckButton(context),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildDrawDate(context),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Divider(height: 10.0,),
+          ),
+          _buildLotteryNumberField(context),
+          _buildCheckButton(context),
+        ],
       ),
     );
   }

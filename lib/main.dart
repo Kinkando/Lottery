@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      scrollBehavior: AppScrollBehavior(), // PageView swipeable on web
+      scrollBehavior: AppScrollBehavior().copyWith(scrollbars: false), // PageView swipeable on web
       debugShowCheckedModeBanner: false,
       title: 'Lottery Unikume',
       theme: ThemeData(
