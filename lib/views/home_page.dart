@@ -4,8 +4,6 @@ import 'package:lottery/services/api.dart';
 import 'package:lottery/views/widgets/my_scaffold.dart';
 
 class HomePage extends StatefulWidget {
-  // static const routeName = '';
-
   const HomePage({Key? key}) : super(key: key);
 
   @override

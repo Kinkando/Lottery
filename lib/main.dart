@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lottery/views/widgets/my_scaffold.dart';
 
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: AppScrollBehavior(), // PageView swipeable on web
       debugShowCheckedModeBanner: false,
       title: 'Lottery Unikume',
       theme: ThemeData(
@@ -21,4 +23,13 @@ class MyApp extends StatelessWidget {
       home: const MyScaffold(),
     );
   }
+}
+
+// PageView swipeable on web
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+  };
 }
