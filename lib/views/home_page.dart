@@ -96,24 +96,15 @@ class _HomePageState extends State<HomePage> {
   Widget _buildLotteryNumber() {
     List<LotteryNumber> lotteryNumber = [];
     _lottery.lottery.forEach((element) => lotteryNumber.add(element));
-    return Padding(
-      padding: const EdgeInsets.only(top:10.0),
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: _loading
-        ? const Center(child: CircularProgressIndicator())
-        : ScrollConfiguration( //Not Scrollbar Display
-          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: ListView(
-            controller: _lotteryScrollController,
-            children: [
-              for(int i=0; i<lotteryNumber.length; i++)
-                _buildLottery(lotteryNumber[i]),
-            ],
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(top:10.0),
+        child: Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
           ),
+          child: const Center(child: CircularProgressIndicator())
         ),
       ),
     );
