@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
             controller: _lotteryScrollController,
             children: [
               for(int i=0; i<lotteryNumber.length; i++)
-                Text('Card $i'),
+                _buildLottery(lotteryNumber[i]),
             ],
           ),
         ),
@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
           if(lottery.set != null)
             Text('ชุดที่ ${lottery.set}'),
           Text(reward),
-          _lotteryNumber(lottery.number),
+          // _lotteryNumber(lottery.number),
         ],
       ),
     );
