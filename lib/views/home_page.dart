@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
           if(lottery.set != null)
             Text('ชุดที่ ${lottery.set}'),
           Text(reward),
-          // _lotteryNumber(lottery.number),
+          _lotteryNumber(lottery.number),
         ],
       ),
     );
@@ -150,18 +150,19 @@ class _HomePageState extends State<HomePage> {
         ],
       );
     }
-    return GridView(
-      controller: _gridViewController,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisExtent: 20.0,
-      ),
-      shrinkWrap: true,
-      children: [
-        for(int i=0; i<number.length; i++)
-          Center(child: Text(number[i])),
-      ],
-    );
+    return const Text("GRID VIEW");
+    // return GridView(
+    //   controller: _gridViewController,
+    //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //     crossAxisCount: 3,
+    //     mainAxisExtent: 20.0,
+    //   ),
+    //   shrinkWrap: true,
+    //   children: [
+    //     for(int i=0; i<number.length; i++)
+    //       Center(child: Text(number[i])),
+    //   ],
+    // );
   }
 
   void _drawDateSelected(BuildContext context) {
