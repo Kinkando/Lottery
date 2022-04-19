@@ -184,90 +184,55 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
   Widget _buildRewardSearch(BuildContext context, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      // child: Row(
-      //   children: [
-      //     Expanded(
-            child: Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _numberController[index],
-                        decoration: const InputDecoration(
-                          hintStyle: TextStyle(fontSize: 17),
-                          hintText: 'กรอกเลขสลากของคุณ',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(10.0),
-                        ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(6),
-                        ],
-                        onChanged: (value) {
-                          if(value.length == 6) {
-                            for(int i=0; i<_numberController.length; i++) {
-                              if(value == _numberController[i].text && index != i) {
-                                setState(() =>_numberController[index].clear());
-                                showMaterialDialog(context, 'คุณระบุหมายเลขสลากนี้แล้ว');
-                                break;
-                              }
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                    if(_numberController.length > 1)
-                      InkWell(
-                        // borderRadius: BorderRadius.circular(50.0),
-                        customBorder: const CircleBorder(),
-                        child: const Center(
-                            child: Icon(Icons.clear, color: Colors.grey),
-                        ),
-                        onTap: () => setState(() =>_numberController.removeAt(index)),
-                      ),
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _numberController[index],
+                  decoration: const InputDecoration(
+                    hintStyle: TextStyle(fontSize: 17),
+                    hintText: 'กรอกเลขสลากของคุณ',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(10.0),
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(6),
                   ],
+                  onChanged: (value) {
+                    if(value.length == 6) {
+                      for(int i=0; i<_numberController.length; i++) {
+                        if(value == _numberController[i].text && index != i) {
+                          setState(() =>_numberController[index].clear());
+                          showMaterialDialog(context, 'คุณระบุหมายเลขสลากนี้แล้ว');
+                          break;
+                        }
+                      }
+                    }
+                  },
                 ),
               ),
-            ),
-          // ),
-          // index != _numberController.length - 1
-          // ? const SizedBox(width: 58.0)
-          // : Padding(
-          //     padding: const EdgeInsets.only(left: 8.0),
-          //     child: InkWell(
-          //       customBorder: const CircleBorder(),
-          //       onTap: () {
-          //         if(_numberController[index].text.length == 6) {
-          //           setState(() {
-          //             _numberController.add(TextEditingController());
-          //           });
-          //         }
-          //         else {
-          //           showMaterialDialog(context, 'เลขสลากไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
-          //         }
-          //       },
-          //       child: Container(
-          //         width: 50.0,
-          //         height: 50.0,
-          //         decoration: const BoxDecoration(
-          //           shape: BoxShape.circle,
-          //           color: Colors.blue,
-          //         ),
-          //         child: const Center(
-          //           child: Icon(Icons.add, color: Colors.white),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-        // ],
-      // ),
+              if(_numberController.length > 1)
+                InkWell(
+                  // borderRadius: BorderRadius.circular(50.0),
+                  customBorder: const CircleBorder(),
+                  child: const Center(
+                      child: Icon(Icons.clear, color: Colors.grey),
+                  ),
+                  onTap: () => setState(() =>_numberController.removeAt(index)),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

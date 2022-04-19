@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   final _drawDateScrollController = ScrollController();
   final _lotteryScrollController = ScrollController();
   final _gridViewController = ScrollController();
-  late String _date;
+  String _date = '';
   bool _loading = true;
   late List _drawDateList;
   late Lottery _lottery;
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if(_loading) {
+    if(_loading && _date.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
     return Padding(
