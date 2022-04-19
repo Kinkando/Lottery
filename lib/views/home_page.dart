@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottery/models/lottery.dart';
 import 'package:lottery/services/api.dart';
-import 'package:lottery/views/widgets/my_scaffold.dart';
+import 'package:lottery/utils/constant.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -26,8 +26,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _fetch() async {
-    List list = await Api().fetch('lotterys/dates');
-    final Map<String, dynamic> result = await Api().fetch('lotterys', queryParams: {'date': list[0]});
+    List list = await Api().fetch('lottery/dates');
+    final Map<String, dynamic> result = await Api().fetch('lottery', queryParams: {'date': list[0]});
     final lottery = Lottery.fromJson(result);
     setState(() {
       _drawDateList = list;
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _loading = true;
     });
-    final Map<String, dynamic> result = await Api().fetch('lotterys', queryParams: {'date': _date});
+    final Map<String, dynamic> result = await Api().fetch('lottery', queryParams: {'date': _date});
     final lottery = Lottery.fromJson(result);
     setState(() {
       _lottery = lottery;
@@ -122,18 +122,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildLottery(LotteryNumber lottery) {
-    String moneyReverse = '';
-    for(int i=lottery.reward.toString().length-1, j=1; i>=0; i--, j++) {
-      moneyReverse += lottery.reward.toString()[i];
-      if(j%3==0 && i!=0) {
-        moneyReverse += ',';
-      }
-    }
-    String money = '';
-    for(int i=moneyReverse.length-1; i>=0; i--) {
-      money += moneyReverse[i];
-    }
-    String reward = 'รางวัลละ $money บาท';
+    String reward = 'รางวัลละ ${numberFormat(lottery.reward.toString())} บาท';
     if(lottery.number.runtimeType == List && lottery.number.length >=5) {
       reward = '${lottery.number.length} รางวัล $reward';
     }

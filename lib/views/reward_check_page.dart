@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottery/services/api.dart';
+import 'package:lottery/utils/constant.dart';
 import 'package:lottery/utils/dialog.dart';
 import 'package:lottery/views/reward_page.dart';
-import 'package:lottery/views/widgets/my_scaffold.dart';
 
 class RewardCheckPage extends StatefulWidget {
   const RewardCheckPage({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
   }
 
   void _fetch() async {
-    List list = await Api().fetch('lotterys/dates', queryParams: {'limit': '100'});
+    List list = await Api().fetch('lottery/dates', queryParams: {'limit': '100'});
     setState(() {
       _drawDateList = list;
       _date = list[0];
@@ -41,7 +41,7 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
     for(int i=0; i<_numberController.length; i++) {
       numbers.add(_numberController[i].text);
     }
-    Map<String, dynamic>? rewards = await Api().fetchBody('lotterys/check/$_date', {'numbers': numbers});
+    Map<String, dynamic>? rewards = await Api().fetchBody('lottery/check/$_date', {'numbers': numbers});
     if(rewards != null) {
       setState(() {
         _rewards = rewards;
@@ -106,7 +106,7 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
             children: [
               const Icon(Icons.calendar_today),
               const SizedBox(width: 10.0),
-              Expanded(child: Text(_dateFormat(_date))),
+              Expanded(child: Text(dateFormat(_date))),
             ],
           ),
         ),
@@ -174,20 +174,13 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
       child: Row(
         children: [
           Expanded(
-            child: Text(_dateFormat(date)),
+            child: Text(dateFormat(date)),
           ),
           Icon(_date == date ? Icons.done : Icons.clear),
           const SizedBox(width: 10.0), //Space for scrollbar
         ],
       ),
     );
-  }
-
-  String _dateFormat(String date) {
-    return 'งวดวันที่ '
-        '${int.parse(date.substring(8))} '
-        '${monthList[int.parse(date.substring(5, 7))-1]} '
-        '${date.substring(0, 4)}';
   }
 
   Widget _buildRewardSearch(BuildContext context, int index) {
@@ -239,8 +232,8 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
             ),
           ),
           index != _numberController.length - 1
-            ? const SizedBox(width: 58.0)
-            : Padding(
+          ? const SizedBox(width: 58.0)
+          : Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: InkWell(
                 customBorder: const CircleBorder(),
@@ -266,7 +259,7 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
                   ),
                 ),
               ),
-            )
+            ),
         ],
       ),
     );
@@ -292,7 +285,7 @@ class _RewardCheckPageState extends State<RewardCheckPage> {
             }
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RewardPage(numbers: numbers, rewards: _rewards)),
+              MaterialPageRoute(builder: (context) => RewardPage(numbers: numbers, rewards: _rewards, date: _date)),
             );
           },
           style: ElevatedButton.styleFrom(
