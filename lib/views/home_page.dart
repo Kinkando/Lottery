@@ -94,6 +94,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildLotteryNumber() {
+    return const Expanded(
+      child: Text("ASD"),
+    );
     List<LotteryNumber> lotteryNumber = [];
     _lottery.lottery.forEach((element) => lotteryNumber.add(element));
     return Padding(
