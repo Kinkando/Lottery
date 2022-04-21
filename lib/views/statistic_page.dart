@@ -81,7 +81,7 @@ class _StatisticPageState extends State<StatisticPage> {
 
   Widget _buildStat() {
     if(_loadingStat) {
-      return const Center(child: CircularProgressIndicator());
+      return const Expanded(child: Center(child: CircularProgressIndicator()));
     }
     // print(_stat);
     return const SizedBox.shrink();
