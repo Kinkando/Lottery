@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottery/services/api.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 class StatisticPage extends StatefulWidget {
   const StatisticPage({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class StatisticPage extends StatefulWidget {
 
 class _StatisticPageState extends State<StatisticPage> {
   final _dropdownController = ScrollController();
+  final _statController = ScrollController();
   final _tab = ["สถิติตามวัน", "สถิติตามเดือน", "สถิติตามปี"];
   final List<String> _weekdayTH = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
   final _weekdayEN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -84,7 +86,41 @@ class _StatisticPageState extends State<StatisticPage> {
       return const Expanded(child: Center(child: CircularProgressIndicator()));
     }
     // print(_stat);
-    return const SizedBox.shrink();
+    List<Widget> widgets = [
+      for(int i=0; i<3; i++)
+        _buildStatCard(i),
+    ];
+    return Expanded(
+      child: CustomScrollView(
+        slivers: widgets,
+      ),
+    );
+  }
+
+  Widget _buildStatCard(int index) {
+    return SliverStickyHeader(
+      header: Container(
+        height: 60.0,
+        color: Colors.lightBlue,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Header #$index',
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate((context, i) =>
+          ListTile(
+              leading: const CircleAvatar(
+                child: Text('0'),
+              ),
+            title: Text('List tile #$i'),
+          ),
+          childCount: 20,
+        ),
+      ),
+    );
   }
 
   Widget _buildComboBox(BuildContext context) {
@@ -207,7 +243,7 @@ class _StatisticPageState extends State<StatisticPage> {
   }
 
   Widget _buildTabMenu() {
-    return Column(
+    return Stack(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -215,44 +251,54 @@ class _StatisticPageState extends State<StatisticPage> {
             children: [
               for(int i=0; i<_tab.length; i++)
                 Expanded(
-                  child: InkWell(
-                    onTap: () => setState(() => _tabIndex = i),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Center(
-                        child: Text(
-                          _tab[i],
-                          style: i == _tabIndex ? const TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ) : const TextStyle(),
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () => setState(() => _tabIndex = i),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Center(
+                            child: Text(
+                              _tab[i],
+                              style: i == _tabIndex ? const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ) : const TextStyle(),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+
+                    ],
                   ),
                 ),
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            children: [
-              for(int i=0; i<_tab.length; i++)
-                Expanded(
-                  child: i == _tabIndex ? Container(
-                    height: 5.0,
-                    color: Colors.blue,
-                  ) : const SizedBox.shrink(),
-                )
-            ],
-          ),
+        Column(
+          children: [
+            const SizedBox(height: 30.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: [
+                  for(int i=0; i<_tab.length; i++)
+                    Expanded(
+                      child: i == _tabIndex ? Container(
+                        height: 5.0,
+                        color: Colors.blue,
+                      ) : const SizedBox.shrink(),
+                    ),
+                ],
+              ),
+            ),
+            const Divider(
+              thickness: 1.0,
+              height: 1,
+              color: Colors.blue,
+            ),
+          ],
         ),
-        const Divider(
-          thickness: 1.0,
-          height: 1,
-          color: Colors.blue,
-        )
       ],
     );
   }
