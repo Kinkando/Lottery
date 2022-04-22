@@ -20,17 +20,17 @@ class _MyScaffoldState extends State<MyScaffold> {
   final _buttonNavigatorItem = [
     {
       "title": "สลากกินแบ่งรัฐบาล",
-      "icon": const Icon(Icons.menu_book),
+      "icon": const Icon(Icons.home),
       "label": "หน้าหลัก",
     },
     {
       "title": "สลากกินแบ่งรัฐบาล",
-      "icon": const Icon(Icons.shopping_cart),
+      "icon": const Icon(Icons.search),
       "label": "ตรวจรางวัล",
     },
     {
       "title": "สลากกินแบ่งรัฐบาล",
-      "icon": const Icon(Icons.shopping_cart),
+      "icon": const Icon(Icons.bar_chart),
       "label": "สถิติหวย",
     }
   ];

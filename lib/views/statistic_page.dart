@@ -10,8 +10,8 @@ class StatisticPage extends StatefulWidget {
 }
 
 class _StatisticPageState extends State<StatisticPage> {
+  final _customScrollViewController = [ScrollController(), ScrollController(), ScrollController()];
   final _dropdownController = ScrollController();
-  final _statController = ScrollController();
   final _tab = ["สถิติตามวัน", "สถิติตามเดือน", "สถิติตามปี"];
   final List<String> _weekdayTH = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
   final _weekdayEN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -21,50 +21,75 @@ class _StatisticPageState extends State<StatisticPage> {
   final Map<String, int> _monthTabIndex = {'month': 0, 'retrospect': 10};
   final Map<String, int> _yearTabIndex = {'retrospect': 10};
   late List<String> _retrospectList;
-  late Map<String, dynamic> _stat;
+  final Map<String, dynamic> _stat = {};
   bool _loading = true;
   bool _loadingStat = false;
 
-  void _fetchStat() async {
-    Map<String, dynamic> queryParams = {};
-    switch(_tabIndex) {
-      case 0 :
-        queryParams['weekday'] = _weekdayEN[_weekdayTabIndex['weekday']!];
-        queryParams['retrospect'] = '${_weekdayTabIndex['retrospect']}';
-        break;
-      case 1 :
-        queryParams['month'] = '${_monthTabIndex['month']!+1}';
-        queryParams['retrospect'] = '${_monthTabIndex['retrospect']}';
-        break;
-      default :
-        queryParams['retrospect'] = '${_yearTabIndex['retrospect']}';
-        break;
-    }
-    setState(() => _loadingStat = true);
-    final Map<String, dynamic>? map = await Api().fetch('lottery/stat', queryParams: queryParams);
-    if(map != null) {
-      setState(() {
-        _stat = map;
-        _loading = false;
-        _loadingStat = false;
-      });
-    }
-  }
-
-  void _fetchRetrospectYear() async {
+  void _fetchInit() async {
+    // *************** YEARS ********************
     List list = await Api().fetch('lottery/years');
     List<String> years = [];
     for(int i=0; i<list.length-1; i++) {
       years.add('${int.parse(list[list.length-1])-int.parse(list[i])} ปีย้อนหลัง');
     }
     setState(() => _retrospectList = years);
+
+    // *************** STAT **********************
+    final queryParams = [
+      {
+        'weekday': _weekdayEN[_weekdayTabIndex['weekday']!],
+        'retrospect': '${_weekdayTabIndex['retrospect']}',
+      },
+      {
+        'month': '${_monthTabIndex['month']!+1}',
+        'retrospect': '${_monthTabIndex['retrospect']}',
+      },
+      {
+        'retrospect': '${_yearTabIndex['retrospect']}',
+      },
+    ];
+    final Map<String, dynamic> weekdayMap = await Api().fetch('lottery/stat', queryParams: queryParams[0]);
+    final Map<String, dynamic> monthMap = await Api().fetch('lottery/stat', queryParams: queryParams[1]);
+    final Map<String, dynamic> yearMap = await Api().fetch('lottery/stat', queryParams: queryParams[2]);
+    setState(() {
+      _stat['weekday'] = weekdayMap;
+      _stat['month'] = monthMap;
+      _stat['year'] = yearMap;
+      _loading = false;
+    });
+  }
+
+  void _fetchStat() async {
+    Map<String, dynamic> queryParams = {};
+    String key = "";
+    switch(_tabIndex) {
+      case 0 :
+        queryParams['weekday'] = _weekdayEN[_weekdayTabIndex['weekday']!];
+        queryParams['retrospect'] = '${_weekdayTabIndex['retrospect']}';
+        key = "weekday";
+        break;
+      case 1 :
+        queryParams['month'] = '${_monthTabIndex['month']!+1}';
+        queryParams['retrospect'] = '${_monthTabIndex['retrospect']}';
+        key = "month";
+        break;
+      default :
+        queryParams['retrospect'] = '${_yearTabIndex['retrospect']}';
+        key = "year";
+        break;
+    }
+    setState(() => _loadingStat = true);
+    final Map<String, dynamic> map = await Api().fetch('lottery/stat', queryParams: queryParams);
+    setState(() {
+      _stat[key] = map;
+      _loadingStat = false;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    _fetchRetrospectYear();
-    _fetchStat();
+    _fetchInit();
   }
 
   @override
@@ -81,43 +106,56 @@ class _StatisticPageState extends State<StatisticPage> {
     );
   }
 
+  String _getCurrentStat() => ['weekday', 'month', 'year'][_tabIndex];
+
   Widget _buildStat() {
     if(_loadingStat) {
       return const Expanded(child: Center(child: CircularProgressIndicator()));
     }
-    // print(_stat);
     List<Widget> widgets = [
-      for(int i=0; i<3; i++)
-        _buildStatCard(i),
+      for(var key in _stat[_getCurrentStat()].keys)
+        _buildStatCard(key, _stat[_getCurrentStat()][key]),
     ];
     return Expanded(
       child: CustomScrollView(
+        controller: _customScrollViewController[_tabIndex],
         slivers: widgets,
       ),
     );
   }
 
-  Widget _buildStatCard(int index) {
+  Widget _buildStatCard(String key, value) {
+    List keys = [
+      for(var key in value.keys)
+        if(int.tryParse(key) != null)
+          key
+    ];
+    keys.sort((a, b) { // sorting from frequency of lottery number and number order sort
+      int result = value[a].compareTo(value[b]);
+      return result == 0 ? (int.parse(a).compareTo(int.parse(b))) : result * -1;
+    });
     return SliverStickyHeader(
       header: Container(
+        // margin: const EdgeInsets.only(bottom: 20.0),
         height: 60.0,
         color: Colors.lightBlue,
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         alignment: Alignment.centerLeft,
         child: Text(
-          'Header #$index',
+          key,
           style: const TextStyle(color: Colors.white),
         ),
       ),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate((context, i) =>
+        delegate: SliverChildBuilderDelegate((context, index) =>
           ListTile(
-              leading: const CircleAvatar(
-                child: Text('0'),
+              leading: CircleAvatar(
+                child: Text('${value[keys[index]]}'),
               ),
-            title: Text('List tile #$i'),
+            title: Text(keys[index]),
+            // title: Text('List tile #$i'),
           ),
-          childCount: 20,
+          childCount: keys.length,
         ),
       ),
     );
@@ -254,7 +292,12 @@ class _StatisticPageState extends State<StatisticPage> {
                   child: Column(
                     children: [
                       InkWell(
-                        onTap: () => setState(() => _tabIndex = i),
+                        onTap: () => setState(() {
+                          // if(_tabIndex != i) {
+                          //   _fetchStat();
+                          // }
+                          _tabIndex = i;
+                        }),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Center(
